@@ -1,8 +1,1 @@
-data_load.py
-output_dirMulti_VIT_best_model_numhead9.pth.tar
-output_dirMulti_VIT_best_model_v2.pth.tar
-output_dirMulti_VIT_best_model.pth.tar
-output_dirMulti_VIT_checkpoint_v2.pth.tar
-output_dirMulti_VIT_checkpoint.pth_numhead8.tar
-output_dirMulti_VIT_checkpoint.pth.tar
-output_dir/
+*.pth.tar

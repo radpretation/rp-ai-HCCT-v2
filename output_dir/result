@@ -1,0 +1,14 @@
+train 2025-11-06 18:53:35.708806
+ ==== TRAIN MAE mtc:0.82820
+epo:062 mtc:2.827
+epo:061 mtc:2.880
+epo:053 mtc:3.009
+epo:051 mtc:3.040
+epo:046 mtc:3.307
+epo:045 mtc:3.330
+epo:041 mtc:3.350
+epo:037 mtc:3.368
+epo:030 mtc:3.940
+epo:028 mtc:4.328
+best valid model TEST MAE mtc:3.34847
+best valid model TEST rr mtc:0.95533
