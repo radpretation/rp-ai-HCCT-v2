@@ -59,6 +59,17 @@ print("=> learning rate    : {}".format(opt.lr))
 print("=> weight decay     : {}".format(opt.weight_decay))
 print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.lbd))
 
+from monai import transforms
+transforms_fn = transforms.Compose([
+    transforms.CopyItemsD(keys={'scan_path'}, names=['image']),
+    transforms.LoadImageD(keys='image'),
+    transforms.EnsureChannelFirstD(keys='image', channel_dim='no_channel'),
+    transforms.SpacingD(keys='image', pixdim=1.4),
+    transforms.ResizeWithPadOrCropD(keys='image', spatial_size=(130, 130, 130), mode='minimum'),
+    transforms.ScaleIntensityD(keys='image', minv=0, maxv=1),
+    transforms.Lambda(lambda d: d['image']),
+])
+
 def main(res):
     best_metric = 100
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -81,9 +92,11 @@ def main(res):
     # print('Val files:- ', os.listdir(opt.valid_folder))
 
     train_data = IMG_Folder( opt.excel_path
-                            ,opt.train_folder)
+                            ,opt.train_folder
+                           , transforms=transforms_fn)
     valid_data = IMG_Folder( opt.excel_path
-                            ,opt.valid_folder)
+                            ,opt.valid_folder
+                           , transforms=transforms_fn)
     
 
     # ===========  define data loader =========== #
@@ -336,6 +349,7 @@ def train(train_loader, model, criterion1,  optimizer, device, epoch):
         # else:
         #     #out = model(input)
         #     out,(attn1, attn2, attn3) = model(input,return_attention_weights=True)
+        # print(input.shape)
         out = model(input)
 
 

@@ -29,6 +29,19 @@ import json
 with open('config.json', 'r') as f:
     config = json.load(f)
 
+
+
+from monai import transforms
+transforms_fn = transforms.Compose([
+    transforms.CopyItemsD(keys={'scan_path'}, names=['image']),
+    transforms.LoadImageD(keys='image'),
+    transforms.EnsureChannelFirstD(keys='image', channel_dim='no_channel'),
+    transforms.SpacingD(keys='image', pixdim=1.4),
+    transforms.ResizeWithPadOrCropD(keys='image', spatial_size=(130, 130, 130), mode='minimum'),
+    transforms.ScaleIntensityD(keys='image', minv=0, maxv=1),
+    transforms.Lambda(lambda d: d['image']),
+])
+
 class AverageMeter(object):
     """Computes and stores the average and current value"""
     def __init__(self):
@@ -55,7 +68,7 @@ def metric(output, target):
 
 def main():
     # ======== define data loader and CUDA device ======== #
-    test_data = IMG_Folder(opt.excel_path, opt.test_folder)
+    test_data = IMG_Folder(opt.excel_path, opt.test_folder, transforms=transforms_fn)
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
